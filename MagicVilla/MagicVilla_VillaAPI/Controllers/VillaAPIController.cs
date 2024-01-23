@@ -1,4 +1,5 @@
-﻿using MagicVilla_VillaAPI.Data;
+﻿using AutoMapper;
+using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
@@ -12,12 +13,14 @@ namespace MagicVilla_VillaAPI.Controllers
     public class VillaAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
         public ILogger<VillaAPIController> _logger;
 
-        public VillaAPIController(ILogger<VillaAPIController> logger, ApplicationDbContext dbContext)
+        public VillaAPIController(ILogger<VillaAPIController> logger, ApplicationDbContext dbContext, IMapper mapper)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
 
@@ -28,7 +31,10 @@ namespace MagicVilla_VillaAPI.Controllers
         public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
         {
             _logger.LogInformation("Getting all villas");
-            return Ok(await _dbContext.Villas.ToListAsync());
+
+            IEnumerable<Villa> villas = await _dbContext.Villas.ToListAsync();
+
+            return Ok(_mapper.Map<IEnumerable<VillaDTO>>(villas).ToList());
         }
 
         // indicates that GET expects an id parameter 
@@ -52,14 +58,14 @@ namespace MagicVilla_VillaAPI.Controllers
                    return NotFound();
             }
 
-            return Ok(villa);
+            return Ok(_mapper.Map<VillaDTO>(villa));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)] 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<VillaDTO>> CreateVilla([FromBody]VillaCreateDTO villaDto)
+        public async Task<ActionResult<VillaDTO>> CreateVilla([FromBody]VillaCreateDTO createDto)
         {
             // not required with data annotations?
             // wont hit breakpoint if model is invalid
@@ -69,15 +75,15 @@ namespace MagicVilla_VillaAPI.Controllers
             }
 
             // check if villa name already exists
-            if(_dbContext.Villas.Any(x => x.Name == villaDto.Name))
+            if(_dbContext.Villas.Any(x => x.Name == createDto.Name))
             {
                 ModelState.AddModelError("", "Villa name must be unique"); // key can be empty string
                 return StatusCode(StatusCodes.Status409Conflict, ModelState);
             }
 
-            if (villaDto == null)
+            if (createDto == null)
             {
-                return BadRequest(villaDto);
+                return BadRequest(createDto);
             }
 
             //if(villaDto.Id > 0)
@@ -85,17 +91,19 @@ namespace MagicVilla_VillaAPI.Controllers
             //    return StatusCode(StatusCodes.Status500InternalServerError);
             //}   
 
-            var villa = new Villa
-            {
-                Id = _dbContext.Villas.Max(x => x.Id) + 1,
-                Name = villaDto.Name
-            };
+            var model = _mapper.Map<Villa>(createDto);
+
+            //var villa = new Villa
+            //{
+            //    Id = _dbContext.Villas.Max(x => x.Id) + 1,
+            //    Name = createDto.Name
+            //};
             // villaDto.Id = VillaStore.villaList.Max(x => x.Id) + 1;
 
-            await _dbContext.Villas.AddAsync(villa); // villaDto
+            await _dbContext.Villas.AddAsync(model); // villaDto
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetVilla), new { id = villa.Id }, villa);
+            return CreatedAtAction(nameof(GetVilla), new { id = model.Id }, model);
             // CreatedAtRoute: return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
             // CreatedAtAction - returns a 201 status code and a location header with the URI of the newly created resource
         }
@@ -130,20 +138,22 @@ namespace MagicVilla_VillaAPI.Controllers
         [HttpPut("{id:int}", Name = "DeleteVilla")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDTO villaDto)
+        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDTO villaUpdateDto)
         {
-            if (villaDto == null || id!= villaDto.Id)
+            if (villaUpdateDto == null || id!= villaUpdateDto.Id)
             {
                 return BadRequest();
             }
 
-            var villa = new Villa
-            {
-                Id = _dbContext.Villas.Max(x => x.Id) + 1,
-                Name = villaDto.Name
-            };
+            var model = _mapper.Map<Villa>(villaUpdateDto);
 
-            _dbContext.Villas.Update(villa);
+            //var villa = new Villa
+            //{
+            //    Id = _dbContext.Villas.Max(x => x.Id) + 1,
+            //    Name = villaUpdateDto.Name
+            //};
+
+            _dbContext.Villas.Update(model);
             await _dbContext.SaveChangesAsync();
 
 
@@ -163,11 +173,14 @@ namespace MagicVilla_VillaAPI.Controllers
             var villa = await _dbContext.Villas.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             // AsNoTracking() - tells EF Core not to track changes to the entity
 
-            VillaUpdateDTO villaDto = new()
-            {
-                Id = villa.Id,
-                Name = villa.Name
-            };
+            
+            var villaDto = _mapper.Map<VillaUpdateDTO>(villa);
+            
+            //VillaUpdateDTO villaDto = new()
+            //{
+            //    Id = villa.Id,
+            //    Name = villa.Name
+            //};
 
             if(villa == null)
             {
@@ -181,11 +194,13 @@ namespace MagicVilla_VillaAPI.Controllers
                 return BadRequest();
             }
 
-            Villa model = new()
-            {
-                Id = villaDto.Id,
-                Name = villaDto.Name
-            };  
+            var model = _mapper.Map<Villa>(villaDto);
+
+            //Villa model = new()
+            //{
+            //    Id = villaDto.Id,
+            //    Name = villaDto.Name
+            //};  
 
             _dbContext.Villas.Update(model);
             await _dbContext.SaveChangesAsync();

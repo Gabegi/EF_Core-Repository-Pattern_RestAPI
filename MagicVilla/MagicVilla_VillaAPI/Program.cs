@@ -27,7 +27,10 @@ builder.Services.AddControllers(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
-builder.Services.AddScoped<IVillaRepository, VillaRepository>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//builder.Services.AddScoped<IVillaRepository, VillaRepository>();
 
 var app = builder.Build();
 

@@ -2,6 +2,7 @@
 using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
+using MagicVilla_VillaAPI.Repository.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,20 @@ namespace MagicVilla_VillaAPI.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IVillaRepository _villaRepository;
         public ILogger<VillaAPIController> _logger;
 
-        public VillaAPIController(ILogger<VillaAPIController> logger, ApplicationDbContext dbContext, IMapper mapper)
+        public VillaAPIController(
+            ILogger<VillaAPIController> logger, 
+            ApplicationDbContext dbContext, 
+            IMapper mapper,
+            IVillaRepository villaRepository
+            )
         {
             _logger = logger;
             _dbContext = dbContext;
             _mapper = mapper;
+            _villaRepository = villaRepository;
         }
 
 
@@ -32,9 +40,11 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             _logger.LogInformation("Getting all villas");
 
-            IEnumerable<Villa> villas = await _dbContext.Villas.ToListAsync();
+            // IEnumerable<Villa> villas = await _dbContext.Villas.ToListAsync();
 
-            return Ok(_mapper.Map<IEnumerable<VillaDTO>>(villas).ToList());
+            IEnumerable<Villa> villas = await _villaRepository.GetAll();
+
+            return Ok(_mapper.Map<List<VillaDTO>>(villas));
         }
 
         // indicates that GET expects an id parameter 
@@ -52,7 +62,11 @@ namespace MagicVilla_VillaAPI.Controllers
                 return BadRequest("Id must be greater than 0");
             }
 
-            var villa = await _dbContext.Villas.FirstOrDefaultAsync(x => x.Id == id);
+            // var villa = await _dbContext.Villas.FirstOrDefaultAsync(x => x.Id == id);
+
+            var villa = await _villaRepository.Get(x => x.Id == id);
+
+
             if (villa == null)
             {
                    return NotFound();

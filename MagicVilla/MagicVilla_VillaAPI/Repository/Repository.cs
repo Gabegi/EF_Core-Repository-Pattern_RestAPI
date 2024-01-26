@@ -39,9 +39,14 @@ namespace MagicVilla_VillaAPI.Repository
             return await query.FirstOrDefaultAsync(); // query will be executed here, deffered execution
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, bool tracked = true)
         {
             IQueryable<T> query = _dbSet;
+
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
 
             if (filter != null)
             {

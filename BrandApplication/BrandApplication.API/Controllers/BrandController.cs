@@ -19,8 +19,7 @@ namespace Plutus.ProductPricing.API.Controllers.Assets_Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<BrandDto>>> GetAllBrands()
         {
-            await _service.GetAllAsync();
-            return Ok();
+            return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id:int}")]

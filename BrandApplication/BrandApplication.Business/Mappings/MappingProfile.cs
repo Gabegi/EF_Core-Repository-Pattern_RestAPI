@@ -4,7 +4,7 @@ using BrandApplication.DataAccess.Models;
 
 namespace BrandApplication.Business.Mappings
 {
-    internal class MappingProfile : Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BrandApplication.Business.Services.IServices;
 using BrandApplication.DataAccess.Interfaces;
-using System.Linq.Expressions;
+using Plutus.ProductPricing.Business.CustomExceptions;
 
 
 namespace BrandApplication.Business.Services
@@ -18,16 +18,50 @@ namespace BrandApplication.Business.Services
             _genericRepository = genericRepository;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<TDto>> GetAllAsync(Expression<Func<TDto, bool>> filter = null)
+        public async Task<IEnumerable<TDto>> GetAllAsync()
         {
-            var result = await _genericRepository.GetAllAsync(_mapper.Map<Expression<Func<TEntity, bool>>>(filter), false);
-            return _mapper.Map<IEnumerable<TDto>>(result);
+            try
+            {
+                var result = await _genericRepository.GetAllAsync();
+
+                if (result.Any())
+                {
+                    return _mapper.Map<IEnumerable<TDto>>(result);
+                }
+                else
+                {
+                    throw new EntityNotFoundException($"No {typeof(TDto).Name}s were found");
+                }
+
+            }
+            catch (EntityNotFoundException ex)
+            {
+                var message = $"Error retrieving all {typeof(TDto).Name}s";
+
+                throw new EntityNotFoundException(message, ex);
+            }
         }
 
         public async Task<TDto> GetByIdAsync(int id)
         {
-            var result = await _genericRepository.GetByIdAsync(id);
-            return _mapper.Map<TDto>(result);
+            try
+            {
+                var result = await _genericRepository.GetByIdAsync(id);
+
+                if (result is null)
+                {
+                    throw new EntityNotFoundException($"Entity with ID {id} not found.");
+                }
+
+                return _mapper.Map<TDto>(result);
+            }
+
+            catch (EntityNotFoundException ex)
+            {
+                var message = $"Error retrieving {typeof(TDto).Name} with Id: {id}";
+
+                throw new EntityNotFoundException(message, ex);
+            }
         }
     }
 }

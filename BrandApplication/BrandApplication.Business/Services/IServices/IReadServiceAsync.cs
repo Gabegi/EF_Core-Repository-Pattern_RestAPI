@@ -1,10 +1,8 @@
-﻿using System.Linq.Expressions;
-
-namespace BrandApplication.Business.Services.IServices
+﻿namespace BrandApplication.Business.Services.IServices
 {
     public interface IReadServiceAsync<TEntity, TDto> where TEntity : class where TDto : class
     {
-        Task<IEnumerable<TDto>> GetAllAsync(Expression<Func<TDto, bool>> filter = null);
+        Task<IEnumerable<TDto>> GetAllAsync();
         Task<TDto> GetByIdAsync(int id);
     }
 }

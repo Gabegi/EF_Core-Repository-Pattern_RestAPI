@@ -1,6 +1,5 @@
 ﻿using BrandApplication.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BrandApplication.DataAccess.Repositories
 {
@@ -36,33 +35,13 @@ namespace BrandApplication.DataAccess.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true)
+        public async Task<List<T>> GetAllAsync(bool tracked = true)
         {
             IQueryable<T> query = _dbSet;
 
             if (!tracked)
             {
                 query = query.AsNoTracking();
-            }
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-            return await query.FirstOrDefaultAsync();
-        }
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, bool tracked = true)
-        {
-            IQueryable<T> query = _dbSet;
-
-            if (!tracked)
-            {
-                query = query.AsNoTracking();
-            }
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
             }
 
             return await query.ToListAsync();

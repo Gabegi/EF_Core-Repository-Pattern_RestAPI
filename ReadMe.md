@@ -13,7 +13,7 @@ You can find the tutorial [here](https://medium.com/@codebob75/entity-framework-
 - Repository Pattern
 - Entity Framework Core
 - SQL Server
-- Unit of Work
+- Unit of Work > coming soon
 
 ## Background
 

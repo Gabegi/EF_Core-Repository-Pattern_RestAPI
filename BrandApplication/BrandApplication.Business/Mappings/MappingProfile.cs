@@ -9,7 +9,7 @@ namespace BrandApplication.Business.Mappings
         public MappingProfile()
         {
             CreateMap<Brand, BrandDto>().ReverseMap();
-            CreateMap<Model, ModelDto>().ReverseMap();
+            CreateMap<ProductModel, ModelDto>().ReverseMap();
         }
     }
 }

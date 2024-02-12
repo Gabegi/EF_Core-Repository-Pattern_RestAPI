@@ -44,7 +44,7 @@ builder.Services.AddScoped(typeof(IGenericServiceAsync<,>), typeof(GenericServic
 //////////////////////////////////// Services ////////////////////////////////////
 
 // Asset Mappings
-builder.Services.AddScoped(typeof(IBrandMapping), typeof(BrandMapping));
+builder.Services.AddScoped(typeof(IBrandService), typeof(BrandService));
 
 
 var app = builder.Build();

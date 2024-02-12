@@ -6,9 +6,9 @@ using BrandApplication.DataAccess.Models;
 
 namespace BrandApplication.Business.Services.ServiceMappings
 {
-    public class BrandMapping : ReadServiceAsync<Brand, BrandDto>, IBrandMapping
+    public class BrandService : ReadServiceAsync<Brand, BrandDto>, IBrandService
     {
-        public BrandMapping(IGenericRepository<Brand> genericRepository, IMapper mapper) : base(genericRepository, mapper)
+        public BrandService(IGenericRepository<Brand> genericRepository, IMapper mapper) : base(genericRepository, mapper)
         {
         }
     }

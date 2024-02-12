@@ -10,7 +10,7 @@ namespace BrandApplication.DataAccess
         }
 
         public DbSet<Brand> Brands { get; set; }
-        public DbSet<Model> Models { get; set; }
+        public DbSet<ProductModel> Models { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

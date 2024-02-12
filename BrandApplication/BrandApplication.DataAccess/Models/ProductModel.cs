@@ -2,7 +2,7 @@
 
 namespace BrandApplication.DataAccess.Models
 {
-    public class Model
+    public class ProductModel
     {
         [Key]
         public int ModelId { get; set; }

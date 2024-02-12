@@ -5,7 +5,7 @@ using BrandApplication.DataAccess.Models;
 namespace BrandApplication.Business.Services.IServices.IServiceMappings
 {
 
-    public interface IBrandMapping: IReadServiceAsync<Brand, BrandDto>
+    public interface IBrandService: IReadServiceAsync<Brand, BrandDto>
     {
     }
 }

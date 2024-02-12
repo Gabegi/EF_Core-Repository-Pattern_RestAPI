@@ -27,7 +27,7 @@ builder.Services.AddDbContext<BrandDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlServerOptionsAction: sqlOptions =>
         {
-            sqlOptions.MigrationsAssembly("Plutus.ProductPricing.DataAccess");
+            sqlOptions.MigrationsAssembly("BrandApplication.DataAccess");
         });
 });
 

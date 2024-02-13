@@ -8,9 +8,9 @@ namespace Plutus.ProductPricing.API.Controllers.Assets_Controllers
     [ApiController]
     public class BrandController : ControllerBase
     {
-        private readonly IBrandMapping _service;
+        private readonly IBrandService _service;
 
-        public BrandController(IBrandMapping service)
+        public BrandController(IBrandService service)
         {
             _service = service;
         }

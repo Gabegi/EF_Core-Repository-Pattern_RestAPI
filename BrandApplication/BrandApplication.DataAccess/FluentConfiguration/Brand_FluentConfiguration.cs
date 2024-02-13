@@ -9,7 +9,7 @@ namespace BrandApplication.DataAccess.FluentConfiguration
         public void Configure(EntityTypeBuilder<Brand> modelBuilder)
         {
             modelBuilder
-                .HasMany<Model>(b => b.Models)
+                .HasMany<ProductModel>(b => b.Models)
                 .WithOne(b => b.Brand)
                 .HasForeignKey(b => b.BrandId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -8,6 +8,6 @@ namespace BrandApplication.DataAccess.Models
         public int BrandId { get; set; }
         public string BrandName { get; set; }
 
-        public ICollection<Model> Models { get; set; }
+        public ICollection<ProductModel> Models { get; set; }
     }
 }

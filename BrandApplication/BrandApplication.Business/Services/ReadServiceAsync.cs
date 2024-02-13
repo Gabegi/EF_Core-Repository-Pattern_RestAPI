@@ -10,19 +10,19 @@ namespace BrandApplication.Business.Services
         where TEntity : class
         where TDto : class
     {
-        private readonly IGenericRepository<TEntity> _genericRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ReadServiceAsync(IGenericRepository<TEntity> genericRepository, IMapper mapper) : base()
+        public ReadServiceAsync(IUnitOfWork unitOfWork, IMapper mapper) : base()
         {
-            _genericRepository = genericRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public async Task<IEnumerable<TDto>> GetAllAsync()
         {
             try
             {
-                var result = await _genericRepository.GetAllAsync();
+                var result = await _unitOfWork.Repository<TEntity>().GetAllAsync();
 
                 if (result.Any())
                 {
@@ -46,7 +46,7 @@ namespace BrandApplication.Business.Services
         {
             try
             {
-                var result = await _genericRepository.GetByIdAsync(id);
+                var result = await _unitOfWork.Repository<TEntity>().GetByIdAsync(id);
 
                 if (result is null)
                 {

@@ -15,5 +15,10 @@ namespace BrandApplication.DataAccess.Repositories
         {
             await _dbContext.SaveChangesAsync();
         }
+
+        public IGenericRepository<T> Repository<T>() where T : class
+        {
+            return new GenericRepository<T>(_dbContext);
+        }
     }
 }

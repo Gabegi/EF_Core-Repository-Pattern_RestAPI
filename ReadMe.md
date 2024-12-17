@@ -1,4 +1,4 @@
-# Rest-API-Auth
+# Repository Pattern with Entity Framework Core
 
 ## Introduction
 This project is a simple example of the Repository pattern with Entity Framework Core.

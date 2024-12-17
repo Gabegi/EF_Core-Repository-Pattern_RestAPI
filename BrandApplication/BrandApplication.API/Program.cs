@@ -34,8 +34,9 @@ builder.Services.AddDbContext<BrandDbContext>(options =>
 //// AutoMapper Configuration
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-//// Generic Repository
+//// Generic Repository & Unit of Work
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //// Generic Services
 builder.Services.AddScoped(typeof(IReadServiceAsync<,>), typeof(ReadServiceAsync<,>));

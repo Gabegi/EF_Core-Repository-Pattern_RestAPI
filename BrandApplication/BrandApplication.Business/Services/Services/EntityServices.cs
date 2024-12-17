@@ -8,7 +8,7 @@ namespace BrandApplication.Business.Services.ServiceMappings
 {
     public class BrandService : ReadServiceAsync<Brand, BrandDto>, IBrandService
     {
-        public BrandService(IGenericRepository<Brand> genericRepository, IMapper mapper) : base(genericRepository, mapper)
+        public BrandService(IUnitOfWork unitOf, IMapper mapper) : base(unitOf, mapper)
         {
         }
     }

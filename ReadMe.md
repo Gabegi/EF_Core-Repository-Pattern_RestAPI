@@ -2,7 +2,7 @@
 
 ## Introduction
 This project is a simple example of the Repository pattern with Entity Framework Core.
-You can find the tutorial [here](https://medium.com/@codebob75/entity-framework-core-code-first-introduction-best-practices-repository-pattern-clean-22b6152bcb81).
+You can find the tutorial [here]([https://medium.com/@codebob75/entity-framework-core-code-first-introduction-best-practices-repository-pattern-clean-22b6152bcb81](https://medium.com/@codebob75/repository-pattern-c-ultimate-guide-entity-framework-core-clean-architecture-dtos-dependency-6a8d8b444dcb)).
 
 
 ## Project setup
